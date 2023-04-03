@@ -46,7 +46,7 @@ lexicon_dir = os.path.join(extra_c_dir, 'lexicon')
 prefix_dir = os.path.join(lexicon_dir, 'prefix')
 suffix_dir = os.path.join(lexicon_dir, 'suffix')
 
-input_phrase = 'ألقي د. أحمد كلمة علي الحضور في أحد القاعات الدراسية و سلم علي صديقه عثمان'
+input_phrase = 'ألقي د. أحمد كلمة علي الحضور في أحد القاعات الدراسية و سلم علي صديقه عثمان الكاتب'
 words_list = input_phrase.split()
 
 root_list = []
@@ -70,6 +70,8 @@ for word in words_list:
                         root_list.append(word)
                     else:
                         # root_list.append(st.stem(word))
+                        word = word[len(p):]
+                        root_list.append(word)
                         continue
         
         y, s = '', ''
@@ -87,6 +89,9 @@ for word in words_list:
                         root_list.append(word)
                     else:
                         # root_list.append(st.stem(word))
+                        word = word[:-1 * len(s)]
+                        root_list.append(word)
                         continue
+        
         
 print(root_list)
