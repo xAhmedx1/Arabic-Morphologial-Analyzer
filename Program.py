@@ -1,5 +1,7 @@
 # Import needed packages
 import os, sys
+
+# -----------------------------------------------------------
 import arabic_reshaper
 from bidi.algorithm import get_display
 # prefix.append(get_display(arabic_reshaper.reshape(t[:-1])))
@@ -8,6 +10,7 @@ from nltk.stem.isri import ISRIStemmer
 from nltk import word_tokenize
 st = ISRIStemmer()
 # nltk.download('punkt')
+# -----------------------------------------------------------
 
 # Main folder path
 dir_path = os.path.join(sys.path[0])
