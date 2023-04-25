@@ -1,7 +1,8 @@
 # Import modules
 import preprocessing as pre
 
-input = "ذهب سامي ليشتري ذهبا من المحل المقابل لبيته"
+input = "ذهب سامي ليشتري ذهبا من المحل المقابل لبيته أذكياء"
+
 i_split = input.split()
 
 root_list = []

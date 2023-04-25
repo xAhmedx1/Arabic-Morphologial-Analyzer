@@ -51,45 +51,55 @@ def known_root(x, lexicon_list):
     if len(root_list) != 0: return max(root_list, key=len)
     return False
 
-def check_lexicon(word, suff=''):
+def suff_finder(word):
+    y, suf = '', ''
+    for i in word[::-1]:
+        y = i + y
+        if y in suff_comb:
+            suf = y
+    return suf
+
+def check_lexicon(word):
+    root_list = []
     r = known_root(word, specialwords_list)
     if r and len(r) > (len(word) - len(r)):
-        return r
+        root_list.append(r)
     elif word[0:2] in prefix_ch:
         ch_list = ch_func(prefix_path, word[0:2])
         r = known_root(word, ch_list)
         if r and len(r) > (len(word) - len(r)):
-            return r
+            root_list.append(r)
     elif word[0] in prefix_ch:
         ch_list = ch_func(prefix_path, word[0])
         r = known_root(word, ch_list)
         if r and len(r) > (len(word) - len(r)):
-            return known_root(word, ch_list)
+            root_list.append(r)
         
+    suff = suff_finder(word)
     if len(suff) != 0:
         if len(suff) >= 2:
             if suff[0:2] in suffix_ch:
                 ch_list = ch_func(suffix_path, suff[0:2])
                 r = known_root(word, ch_list)
                 if r and len(r) > (len(word) - len(r)):
-                    return known_root(word, ch_list)
+                    root_list.append(r)
             elif suff[0] in suffix_ch:
                 ch_list = ch_func(suffix_path, suff[0])
                 r = known_root(word, ch_list)
                 if r and len(r) > (len(word) - len(r)):
-                    return known_root(word, ch_list)
+                    root_list.append(r)
         else: 
             ch_list = ch_func(suffix_path, suff[0])
             r = known_root(word, ch_list)
             if r and len(r) > (len(word) - len(r)):
-                return known_root(word, ch_list)
-
+                root_list.append(r)
+    if len(root_list) != 0: return max(root_list, key=len)
     return False
 
 specialwords_list = ch_func(files_path, 'special_words')
 
 prefix_ch = ['س', 'ال', 'أ', 'ل', 'ب', 'ك', 'ف', 'و']
-suffix_ch = ['ين', 'ان', 'و', 'ه', 'ك', 'ا', 'ي', 'ن', 'ت', 'ات', 'ون', 'وا', 'تم', 'هم', 'كم', 'ة']
+suffix_ch = ['ين', 'ان', 'و', 'ه', 'ك', 'ا', 'ي', 'ن', 'ت', 'ات', 'ون', 'وا', 'تم', 'هم', 'كم', 'ة', 'ء', 'اء']
 suff_comb = ['يا', 'ت', 'ة', 'ك', 'تم', 'هم', 'ي', 'اء', 'ان', 'هما'
              , 'كم', 'وها', 'ا', 'ه', 'ين', 'يه', 'ون', 'ها', 'وا', 'ء'
              , 'ات', 'ية', 'نا', 'تموها', 'تن', 'هنن', 'ني', 'اتي', 'تي', 'هن']
@@ -254,14 +264,10 @@ def pref_handler(word):
     return word
 
 def suff_handler(word):
-    y, c = '', ''
-    for i in word[::-1]:
-        y = i + y
-        if y in suff_comb:
-            c = y
+    c = suff_finder(word)
 
     if c != '': 
         # if len(c) >= 2 and c[0:2] in suffix_ch:
-        if check_lexicon(word, c): return check_lexicon(word, c)
+        if check_lexicon(word): return check_lexicon(word)
         return suff_handler(word[0:len(word)-len(c)])
     else: return word
