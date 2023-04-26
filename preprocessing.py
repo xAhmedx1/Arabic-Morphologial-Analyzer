@@ -1,5 +1,6 @@
 # Import Needed Modules
 import os, sys
+import pattern_recognition as pat_r
 
 # Defining folders pathes
 dir_path = os.path.join(sys.path[0])
@@ -121,6 +122,8 @@ def sen_pref(word):
     """
     if len(word) > 3:
         if check_lexicon(word): return check_lexicon(word)
+        elif pat_r.pattern_finder(word):
+            return pat_r.pattern_finder(word)
         elif word[1] in ['أ', 'ي', 'ت', 'ن']:
             return word[2:]
         else: return word
@@ -132,6 +135,8 @@ def al_pref(word):
     """
     if len(word) > 4:
         if check_lexicon(word): return check_lexicon(word)
+        elif pat_r.pattern_finder(word):
+            return pat_r.pattern_finder(word)
         elif word[2] in ['أ', 'ا', 'آ', 'إ']:
             return word[2:]
         else: return word[2:]
@@ -144,6 +149,8 @@ def hamza_pref(word):
     if len(word) > 3:
        if check_lexicon(word): 
             return check_lexicon(word)
+       elif pat_r.pattern_finder(word):
+            return pat_r.pattern_finder(word)
        elif word[1] == 'أ':
             return word[1:]
        else: return 'ا' + word[1:]
@@ -155,6 +162,8 @@ def lam_pref(word):
     """
     if len(word) > 3:
         if check_lexicon(word): return check_lexicon(word)
+        elif pat_r.pattern_finder(word):
+            return pat_r.pattern_finder(word)
         elif word[1] in ['أ', 'ي', 'ت', 'ن']:
             return word[2:]
         else: return word
@@ -166,6 +175,8 @@ def baa_pref(word):
     """
     if len(word) > 3:
         if check_lexicon(word): return check_lexicon(word)
+        elif pat_r.pattern_finder(word):
+            return pat_r.pattern_finder(word)
         elif word[1:3] == 'ال':
             return al_pref(word[1:])
         else: return word
@@ -177,6 +188,8 @@ def kaph_pref(word):
     """
     if len(word) > 3:
         if check_lexicon(word): return check_lexicon(word)
+        elif pat_r.pattern_finder(word):
+            return pat_r.pattern_finder(word)
         elif word[1:3] == 'ال':
             return al_pref(word[1:])
         else: return word
@@ -188,6 +201,8 @@ def faa_pref(word):
     """
     if len(word) > 3:
         if check_lexicon(word): return check_lexicon(word)
+        elif pat_r.pattern_finder(word):
+            return pat_r.pattern_finder(word)
         elif word[1] == 'ب':
             return baa_pref(word[1:])
         elif word[1] == 'ك':
@@ -210,6 +225,8 @@ def waw_pref(word):
     if len(word) > 3:
         if check_lexicon(word): 
             return check_lexicon(word)
+        elif pat_r.pattern_finder(word):
+            return pat_r.pattern_finder(word)
         elif word[1] == 'ب':
             return baa_pref(word[1:])
         elif word[1] == 'ك':
@@ -244,6 +261,9 @@ def pref_handler(word):
     if len(word) > 3:
         if word[0:2] in duplicate_p_letters: return word[1:]
         elif multiletter_pre(word): return multiletter_pre(word)
+        elif check_lexicon(word): return check_lexicon(word)
+        elif pat_r.pattern_finder(word):
+            return pat_r.pattern_finder(word)
         elif word[0] == 'س':
             return sen_pref(word)
         elif word[0:2] == 'ال' and len(word) > 4:
@@ -265,8 +285,9 @@ def pref_handler(word):
 
 def suff_handler(word):
     c = suff_finder(word)
-
-    if c != '': 
+    if pat_r.pattern_finder(word):
+            return pat_r.pattern_finder(word)
+    elif c != '': 
         # if len(c) >= 2 and c[0:2] in suffix_ch:
         if check_lexicon(word): return check_lexicon(word)
         return suff_handler(word[0:len(word)-len(c)])
