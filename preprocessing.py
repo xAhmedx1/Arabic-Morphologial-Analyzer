@@ -9,6 +9,10 @@ lexicon_path = os.path.join(files_path, 'lexicon')
 prefix_path = os.path.join(lexicon_path, 'prefix')
 suffix_path = os.path.join(lexicon_path, 'suffix')
 
+characters = ['ا', 'أ', 'آ', 'إ', 'ب', 'ت', 'ث', 'ج', 'ح', 'خ', 'د', 'ذ', 'ر', 'ز', 
+              'س', 'ش', 'ص', 'ض', 'ط', 'ظ', 'ع', 'غ', 'ق', 'ك', 'ل', 'م', 'ن', 'ه', 
+              'و', 'ي', 'ء', 'ؤ', 'ئ', 'ة']
+
 def normalize(word):
     """
     Removing diacritics in g given word (except the shaddah '  ّ' the letter that contains it will be duplicated)
@@ -17,16 +21,13 @@ def normalize(word):
     
     e.g. "كُتَّاب" --> "كتتاب"
     """
-    with open(os.path.join(files_path, 'characters.txt'), "r", encoding = "utf-8") as f:
-        v = f.readlines()
     n_word = ""
     for i in range(len(word)):
         k = word[i]
-        j = word[i] + '\n'
         if word[0] in ['إ', 'آ'] and n_word == "":
             n_word += 'ا'
         elif k == 'ّ': n_word += word[i-1]
-        elif j in v: n_word += k
+        elif k in characters: n_word += k
         elif k == 'ى': n_word += 'ي'
         else: continue
     return n_word
