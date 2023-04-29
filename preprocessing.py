@@ -10,8 +10,8 @@ prefix_path = os.path.join(lexicon_path, 'prefix')
 suffix_path = os.path.join(lexicon_path, 'suffix')
 
 characters = ['ا', 'أ', 'آ', 'إ', 'ب', 'ت', 'ث', 'ج', 'ح', 'خ', 'د', 'ذ', 'ر', 'ز', 
-              'س', 'ش', 'ص', 'ض', 'ط', 'ظ', 'ع', 'غ', 'ق', 'ك', 'ل', 'م', 'ن', 'ه', 
-              'و', 'ي', 'ء', 'ؤ', 'ئ', 'ة']
+              'س', 'ش', 'ص', 'ض', 'ط', 'ظ', 'ع', 'غ', 'ف', 'ق', 'ك', 'ل', 'م', 'ن', 
+              'ه', 'و', 'ي', 'ء', 'ؤ', 'ئ', 'ة']
 
 def normalize(word):
     """
@@ -46,11 +46,12 @@ def ch_func(path, ch):
     return ch_list
 
 def known_root(x, lexicon_list):
-    root_list = []
-    for l in lexicon_list:
-        if l in x:
-            root_list.append(l)
-    if len(root_list) != 0: return max(root_list, key=len)
+    if x[-1] != 'ة':
+        root_list = []
+        for l in lexicon_list:
+            if l in x:
+                root_list.append(l)
+        if len(root_list) != 0: return max(root_list, key=len)
     return False
 
 def suff_finder(word):

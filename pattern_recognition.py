@@ -4,7 +4,7 @@ patterns = ['فاعل','فعل','أفعل','تفعل','انفعل','افتعل',
             'متفعل', 'مفاعلة','إفعال','تفعيل','تفاعل','انفعال','افتعال',
             'افعلال','استفعال', 'مفعال', 'تستفعل', 'نستفعل', 'نفعال', 'فعال',
             'فتعل', 'فعائل', 'مفاعيل', 'فعول', 'فاعول', 'فعيل', 'فعاليل', 'افعال'
-            'فعلال', 'فعلال', 'مفعلة']
+            'فعلال', 'فعلال', 'مفعلة', 'فاعلة']
 original = ['ف', 'ع', 'ل']
 
 def pattern_finder(input):
@@ -28,15 +28,24 @@ def pattern_finder(input):
 
 def normalize_root(possible_roots):
     norm_list = []
-    for root in possible_roots:
-        norm_root = ""
-        for i in range(len(root)):
-            if root[i] in ['ئ', 'ؤ']:
-                norm_root += 'ء'
-            elif root[i] == 'ة':
-                norm_root += 'ت'
-            else: norm_root += root[i]
+    norm_root = ""
+    for j in range(len(possible_roots)):
+        if type(possible_roots) == list:
+            norm_root = ""
+            for i in range(len(possible_roots[j])):
+                if possible_roots[j][i] in ['ئ', 'ؤ']:
+                    norm_root += 'ء'
+                elif possible_roots[j][i] == 'ة':
+                    norm_root += 'ت'
+                else: norm_root += possible_roots[j][i]
+            norm_list.append(norm_root)
+        else:
+            if possible_roots[j] in ['ئ', 'ؤ']:
+                    norm_root += 'ء'
+            elif possible_roots[j] == 'ة':
+                    norm_root += 'ت'
+            else: norm_root += possible_roots[j]
         
-        norm_list.append(norm_root)
+    if type(possible_roots) != list: norm_list.append(norm_root)
 
     return norm_list
