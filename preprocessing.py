@@ -26,7 +26,7 @@ def normalize(word):
         k = word[i]
         if word[0] in ['إ', 'آ'] and n_word == "":
             n_word += 'ا'
-        elif k == 'ّ': n_word += word[i-1]
+        elif k == 'ّ': n_word += word[i-1]   # shaddah ' ّ'
         elif k in characters: n_word += k
         elif k == 'ى': n_word += 'ي'
         else: continue
@@ -46,7 +46,7 @@ def ch_func(path, ch):
     return ch_list
 
 def known_root(x, lexicon_list):
-    if x[-1] != 'ة':
+    if len(x) != 0: #  and x[-1] != 'ة'
         root_list = []
         for l in lexicon_list:
             if l in x:
@@ -60,44 +60,48 @@ def suff_finder(word):
         y = i + y
         if y in suff_comb:
             suf = y
-    return suf
+    if len(word) - len(suf) > 2:
+        return suf
+    else: return ''
 
 def check_lexicon(word):
-    root_list = []
-    r = known_root(word, specialwords_list)
-    if r and len(r) > (len(word) - len(r)):
-        root_list.append(r)
-    elif word[0:2] in prefix_ch:
-        ch_list = ch_func(prefix_path, word[0:2])
-        r = known_root(word, ch_list)
+    if len(word) != 0:
+        root_list = []
+        r = known_root(word, specialwords_list)
         if r and len(r) > (len(word) - len(r)):
             root_list.append(r)
-    elif word[0] in prefix_ch:
-        ch_list = ch_func(prefix_path, word[0])
-        r = known_root(word, ch_list)
-        if r and len(r) > (len(word) - len(r)):
-            root_list.append(r)
-        
-    suff = suff_finder(word)
-    if len(suff) != 0:
-        if len(suff) >= 2:
-            if suff[0:2] in suffix_ch:
-                ch_list = ch_func(suffix_path, suff[0:2])
-                r = known_root(word, ch_list)
-                if r and len(r) > (len(word) - len(r)):
-                    root_list.append(r)
-            elif suff[0] in suffix_ch:
+        elif word[0:2] in prefix_ch:
+            ch_list = ch_func(prefix_path, word[0:2])
+            r = known_root(word, ch_list)
+            if r and len(r) > (len(word) - len(r)):
+                root_list.append(r)
+        elif word[0] in prefix_ch:
+            ch_list = ch_func(prefix_path, word[0])
+            r = known_root(word, ch_list)
+            if r and len(r) > (len(word) - len(r)):
+                root_list.append(r)
+            
+        suff = suff_finder(word)
+        if len(suff) != 0:
+            if len(suff) >= 2:
+                if suff[0:2] in suffix_ch:
+                    ch_list = ch_func(suffix_path, suff[0:2])
+                    r = known_root(word, ch_list)
+                    if r and len(r) > (len(word) - len(r)):
+                        root_list.append(r)
+                elif suff[0] in suffix_ch:
+                    ch_list = ch_func(suffix_path, suff[0])
+                    r = known_root(word, ch_list)
+                    if r and len(r) > (len(word) - len(r)):
+                        root_list.append(r)
+            else: 
                 ch_list = ch_func(suffix_path, suff[0])
                 r = known_root(word, ch_list)
                 if r and len(r) > (len(word) - len(r)):
                     root_list.append(r)
-        else: 
-            ch_list = ch_func(suffix_path, suff[0])
-            r = known_root(word, ch_list)
-            if r and len(r) > (len(word) - len(r)):
-                root_list.append(r)
-    if len(root_list) != 0: return max(root_list, key=len)
-    return False
+        if len(root_list) != 0: return max(root_list, key=len)
+        return False
+    else : return None
 
 specialwords_list = ch_func(files_path, 'special_words')
 
@@ -118,131 +122,156 @@ faa_list = ch_func(prefix_path, 'ف')
 waw_list = ch_func(prefix_path, 'و')
 
 # Creating a function for each prefix to check if it is really a prefix based or our roles we put, or not
-def sen_pref(word):
+def sen_pref(word, p):
     """
     check if the sen 'س' is a prefix of not, and remove it if it was
     """
     if len(word) > 3:
-        if check_lexicon(word): return check_lexicon(word)
-        elif pat_r.pattern_finder(word):
-            return pat_r.pattern_finder(word)
-        elif word[1] in ['أ', 'ي', 'ت', 'ن']:
-            return word[2:]
-        else: return word
-    else: return word
+        pat = pat_r.pattern_finder(word, p)
+        if check_lexicon(word): 
+            p.append(check_lexicon(word))
+            return '', p
+        elif len(pat) != 0:
+            p = pat
+        if word[1] in ['أ', 'ي', 'ت', 'ن']:
+            return word[2:], p
+        else: return word, p
+    else: return word, p
 
-def al_pref(word):
+def al_pref(word, p):
     """
     check if the al 'ال' is a prefix of not, and remove it if it was
     """
     if len(word) > 4:
-        if check_lexicon(word): return check_lexicon(word)
-        elif pat_r.pattern_finder(word):
-            return pat_r.pattern_finder(word)
-        elif word[2] in ['أ', 'ا', 'آ', 'إ']:
-            return word[2:]
-        else: return word[2:]
-    else: return word
+        pat = pat_r.pattern_finder(word, p)
+        if check_lexicon(word): 
+            p.append(check_lexicon(word))
+            return '', p
+        elif check_lexicon(word[1:]): 
+            p.append(check_lexicon(word[1:]))
+            return '', p
+        elif len(pat) != 0:
+            p = pat
+        if word[2] in ['أ', 'ا', 'آ', 'إ']:
+            return word[2:], p
+        else: return word[2:], p
+    else: return word, p
 
-def hamza_pref(word):
+def hamza_pref(word, p):
     """
     check if the hamza 'أ' is a prefix of not, and remove it if it was
     """
     if len(word) > 3:
+       pat = pat_r.pattern_finder(word, p)
        if check_lexicon(word): 
-            return check_lexicon(word)
-       elif pat_r.pattern_finder(word):
-            return pat_r.pattern_finder(word)
-       elif word[1] == 'أ':
-            return word[1:]
-       else: return 'ا' + word[1:]
-    else: return word
+            p.append(check_lexicon(word))
+            return '', p
+       elif len(pat) != 0:
+            p = pat
+       if word[1] == 'أ':
+            return word[1:], p
+       else: return 'ا' + word[1:], p
+    else: return word, p
 
-def lam_pref(word):
+def lam_pref(word, p):
     """
     check if the lam 'ل' is a prefix of not, and remove it if it was
     """
     if len(word) > 3:
-        if check_lexicon(word): return check_lexicon(word)
-        elif pat_r.pattern_finder(word):
-            return pat_r.pattern_finder(word)
-        elif word[1] in ['أ', 'ي', 'ت', 'ن']:
-            return word[2:]
-        else: return word
-    else: return word
+        pat = pat_r.pattern_finder(word, p)
+        if check_lexicon(word): 
+            p.append(check_lexicon(word))
+            return '', p
+        elif len(pat) != 0:
+            p = pat
+        if word[1] in ['أ', 'ي', 'ت', 'ن']:
+            return word[2:], p
+        else: return word, p
+    else: return word, p
 
-def baa_pref(word):
+def baa_pref(word, p):
     """
     check if the baa 'ب' is a prefix of not, and remove it if it was
     """
     if len(word) > 3:
-        if check_lexicon(word): return check_lexicon(word)
-        elif pat_r.pattern_finder(word):
-            return pat_r.pattern_finder(word)
-        elif word[1:3] == 'ال':
-            return al_pref(word[1:])
-        else: return word
-    else: return word
+        pat = pat_r.pattern_finder(word, p)
+        if check_lexicon(word): 
+            p.append(check_lexicon(word))
+            return '', p
+        elif len(pat) != 0:
+            p = pat
+        if word[1:3] == 'ال':
+            return al_pref(word[1:], p)
+        else: return word, p
+    else: return word, p
 
-def kaph_pref(word):
+def kaph_pref(word, p):
     """
     check if the kaph 'ك' is a prefix of not, and remove it if it was
     """
     if len(word) > 3:
-        if check_lexicon(word): return check_lexicon(word)
-        elif pat_r.pattern_finder(word):
-            return pat_r.pattern_finder(word)
-        elif word[1:3] == 'ال':
-            return al_pref(word[1:])
-        else: return word
-    else: return word
+        pat = pat_r.pattern_finder(word, p)
+        if check_lexicon(word): 
+            p.append(check_lexicon(word))
+            return '', p
+        elif len(pat) != 0:
+            p = pat
+        if word[1:3] == 'ال':
+            return al_pref(word[1:], p)
+        else: return word, p
+    else: return word, p
 
-def faa_pref(word):
+def faa_pref(word, p):
     """
     check if the faa 'ف' is a prefix of not, and remove it if it was
     """
     if len(word) > 3:
-        if check_lexicon(word): return check_lexicon(word)
-        elif pat_r.pattern_finder(word):
-            return pat_r.pattern_finder(word)
-        elif word[1] == 'ب':
-            return baa_pref(word[1:])
+        pat = pat_r.pattern_finder(word, p)
+        if check_lexicon(word): 
+            p.append(check_lexicon(word))
+            return '', p
+        elif len(pat) != 0:
+            p = pat
+        if word[1] == 'ب':
+            return baa_pref(word[1:], p)
         elif word[1] == 'ك':
-            return kaph_pref(word[1:])
+            return kaph_pref(word[1:], p)
         elif word[1:3] == 'ال':
-            return al_pref(word[1:])
+            return al_pref(word[1:], p)
         elif word[1] == 'س':
-            return sen_pref(word[1:])
+            return sen_pref(word[1:], p)
         elif word[1] == 'ل':
-            return lam_pref(word[1:])
+            return lam_pref(word[1:], p)
         elif word[1] == 'أ':
             return hamza_pref(word[1:])
-        else: return word
-    else: return word
+        else: return word, p
+    else: return word, p
 
-def waw_pref(word):
+def waw_pref(word, p):
     """
     check if the waw 'و' is a prefix of not, and remove it if it was
     """
     if len(word) > 3:
+        pat = pat_r.pattern_finder(word, p)
         if check_lexicon(word): 
-            return check_lexicon(word)
-        elif pat_r.pattern_finder(word):
-            return pat_r.pattern_finder(word)
-        elif word[1] == 'ب':
-            return baa_pref(word[1:])
+            p.append(check_lexicon(word))
+            return '', p
+        elif len(pat) != 0:
+            p = pat
+        if word[1] == 'ب':
+            return baa_pref(word[1:], p)
         elif word[1] == 'ك':
-            return kaph_pref(word[1:])
+            return kaph_pref(word[1:], p)
         elif word[1:3] == 'ال':
-            return al_pref(word[1:])
+            return al_pref(word[1:], p)
         elif word[1] == 'س':
-            return sen_pref(word[1:])
+            return sen_pref(word[1:], p)
         elif word[1] == 'ل':
-            return lam_pref(word[1:])
+            return lam_pref(word[1:], p)
         elif word[1] == 'أ':
-            return hamza_pref(word[1:])
-        else: return word
-    else: return word
+            return hamza_pref(word[1:], p)
+        else: return word, p
+    else: return word, p
 
 duplicate_p_letters = ['تت', 'بب', 'كك', 'فف', 'لل', 'وو']
 multiletter = ['نست', 'لن', 'مست', 'سي', 'سن', 'ست', 'سأ', 'تنن', 'است', 'ات']
@@ -256,41 +285,53 @@ def multiletter_pre(word):
     if p != '': return word[len(p):]
     else: return False
 
-def pref_handler(word):
+def pref_handler(word, possible_roots):
     """
     Handling the prefix of a word
     """
     if len(word) > 3:
-        if word[0:2] in duplicate_p_letters: return word[1:]
-        elif multiletter_pre(word): return multiletter_pre(word)
-        elif check_lexicon(word): return check_lexicon(word)
-        elif pat_r.pattern_finder(word):
-            return pat_r.pattern_finder(word)
-        elif word[0] == 'س':
-            return sen_pref(word)
+        pos_r = possible_roots
+        p = pat_r.pattern_finder(word, pos_r)
+        possible_roots = []
+        if word[0:2] in duplicate_p_letters: 
+            possible_roots.append(word[1:])
+            return '', possible_roots
+        elif multiletter_pre(word): 
+            possible_roots.append(multiletter_pre(word))
+            return multiletter_pre(word), []
+        elif check_lexicon(word): 
+            possible_roots.append(check_lexicon(word))
+            return '', possible_roots
+        elif len(p) != 0:
+            possible_roots = p
+        if word[0] == 'س':
+            return sen_pref(word, possible_roots)
         elif word[0:2] == 'ال' and len(word) > 4:
-            return al_pref(word)
+            return al_pref(word, possible_roots)
         elif word[0] == 'أ':
-            return hamza_pref(word)
+            return hamza_pref(word, possible_roots)
         elif word[0] == 'ل':
-            return lam_pref(word)
+            return lam_pref(word, possible_roots)
         elif word[0] == 'ب':
-            return baa_pref(word)
+            return baa_pref(word, possible_roots)
         elif word[0] == 'ك':
-            return kaph_pref(word)
+            return kaph_pref(word, possible_roots)
         elif word[0] == 'ف':
-            return faa_pref(word)
+            return faa_pref(word, possible_roots)
         elif word[0] == 'و':
-            return waw_pref(word)
-    else: return word
-    return word
+            return waw_pref(word, possible_roots)
+    else: return word, possible_roots
+    return word, possible_roots
 
-def suff_handler(word):
+def suff_handler(word, possible_roots):
     c = suff_finder(word)
-    if pat_r.pattern_finder(word):
-            return pat_r.pattern_finder(word)
-    elif c != '': 
-        # if len(c) >= 2 and c[0:2] in suffix_ch:
-        if check_lexicon(word): return check_lexicon(word)
-        return suff_handler(word[0:len(word)-len(c)])
-    else: return word
+    p = pat_r.pattern_finder(word, possible_roots)
+    if len(p) != 0:
+        possible_roots = p
+    if len(word) != 0 and c != '': 
+
+        if check_lexicon(word): 
+            possible_roots.append(check_lexicon(word))
+            return '', possible_roots
+        return suff_handler(word[0:len(word)-len(c)], possible_roots)
+    else: return word, possible_roots
