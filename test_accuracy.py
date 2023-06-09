@@ -35,8 +35,4 @@ for i in range(len(words)):
         correct_root.append(roots[i])
         f_words.append(words[i])
 
-
-for i in range(len(err)):
-    print(f"{f_words[i]} : {err[i]} ---> {correct_root[i]}")
-
 print(f'Accuracy: {round(score/len(words)*100, 2)}%')

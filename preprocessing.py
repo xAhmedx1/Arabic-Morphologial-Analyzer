@@ -243,7 +243,7 @@ def faa_pref(word, p):
         elif word[1] == 'ل':
             return lam_pref(word[1:], p)
         elif word[1] == 'أ':
-            return hamza_pref(word[1:])
+            return hamza_pref(word[1:], p)
         else: return word, p
     else: return word, p
 
