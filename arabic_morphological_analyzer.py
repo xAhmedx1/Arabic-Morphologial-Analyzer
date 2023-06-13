@@ -1,4 +1,4 @@
-# from tkinter import *
+# Import Libraries
 import tkinter as tk
 from tkinter import ttk
 import Program as pg
@@ -6,29 +6,20 @@ import loading_screen as ld
 import ArabicPluralDetector as fb
 
 
-
- 
-
-
-
 def Home():
     for widget in root.winfo_children():
         widget.place_forget()
     canvas.itemconfig(text, text="Morographical Analysis")
-    
     
     about_btn.place(x=200,y=450)
     typ_btn.place(x=350,y=500)
     enter_btn.place(x=350,y=450)
     exit_btn.place(x=500,y=450)
     
-    
     home_btn.place_forget()
     text_input.place_forget()
     gen_btn.place_forget()
     generate_btn.place_forget()
-    
-    
     
 
 def About():
@@ -39,13 +30,13 @@ def About():
     label1 = tk.Label(root, text=("يوسف محمد سعيد") ,font=("Arial"))
     label1.config(width=30)
     label1.place(x=250,y=200)
-    label2 = tk.Label(root, text=("احمد خالد محمد كامل") ,font=("Arial"))
+    label2 = tk.Label(root, text=("أحمد خالد محمد كامل") ,font=("Arial"))
     label2.config(width=30)
     label2.place(x=250,y=260)
     label3 = tk.Label(root, text=("محمد عبدالوهاب") ,font=("Arial"))
     label3.config(width=30)
     label3.place(x=250,y=320)
-    label4 = tk.Label(root, text=("احمد محمد محمود") ,font=("Arial"))
+    label4 = tk.Label(root, text=("أحمد محمد محمود") ,font=("Arial"))
     label4.config(width=30)
     label4.place(x=250,y=380)
 
@@ -56,8 +47,7 @@ def About():
     typ_btn.place_forget()
     enter_btn.place_forget()
     exit_btn.place_forget()
-
-    
+ 
     
 def Typ():
         canvas.itemconfig(text, text="")
@@ -66,16 +56,10 @@ def Typ():
         gen_btn.place(x=80,y=37)
         home_btn.place(x=80,y=500)
     
-    
         about_btn.place_forget()
         enter_btn.place_forget()
         typ_btn.place_forget()
         exit_btn.place_forget()
-        
-        
-        
-    
-        
         
 
 def Enter():
@@ -89,7 +73,6 @@ def Enter():
     enter_btn.place_forget()
     typ_btn.place_forget()
     exit_btn.place_forget()
-    
     
     
 def Gen():
@@ -128,16 +111,11 @@ def Gen():
         for j in range(num_outputs):
             cell = tk.Label(root, text=output[j])
             cell.config(width=18)
-            cell.place(x=300-n, y=173+r)
-            
-            
+            cell.place(x=300-n, y=173+r)  
             
         n = 0
         r += 23
         m += 23
-    
-    
-    
 
 
 def Generate():
@@ -182,11 +160,11 @@ def center_window(root, width, height):
 
     root.geometry(f"{width}x{height}+{x}+{y}")
 
+
 root = tk.Tk()
 root.title("Morographical Analysis")
 root.overrideredirect(True)  
 center_window(root, 800, 600)
-
 
 
 canvas = tk.Canvas(root, width=800, height=700,background="#669CB2")
