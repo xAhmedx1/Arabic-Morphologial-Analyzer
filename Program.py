@@ -14,6 +14,7 @@ class program:
             normalized_word = pre.normalize(word)
             wordv2, possible_roots = pre.pref_handler(normalized_word, possible_roots)
             wordv2, possible_roots = pre.suff_handler(wordv2, possible_roots)
+            # wordv2, possible_roots = pre.pref_handler(normalized_word, possible_roots)
 
             if pre.check_lexicon(wordv2) == False:
                 possible_roots = pat_r.normalize_root(possible_roots)

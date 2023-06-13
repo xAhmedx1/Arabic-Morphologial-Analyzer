@@ -186,8 +186,8 @@ def lam_pref(word, p):
             p = pat
         if word[1] in ['أ', 'ي', 'ت', 'ن']:
             return word[2:], p
-        else: return word, p
-    else: return word, p
+        else: return word[1:], p
+    else: return word[2:], p
 
 def baa_pref(word, p):
     """
@@ -202,7 +202,7 @@ def baa_pref(word, p):
             p = pat
         if word[1:3] == 'ال':
             return al_pref(word[1:], p)
-        else: return word, p
+        else: return word[1:], p
     else: return word, p
 
 def kaph_pref(word, p):
