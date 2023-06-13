@@ -1,26 +1,39 @@
-# ‍‍from tkinter import *
+# from tkinter import *
 import tkinter as tk
 from tkinter import ttk
 import Program as pg
 import loading_screen as ld
+import ArabicPluralDetector as fb
+
+
+
+ 
+
+
 
 def Home():
     for widget in root.winfo_children():
         widget.place_forget()
     canvas.itemconfig(text, text="Morographical Analysis")
     
+    
     about_btn.place(x=200,y=450)
+    typ_btn.place(x=350,y=500)
     enter_btn.place(x=350,y=450)
     exit_btn.place(x=500,y=450)
-
+    
+    
     home_btn.place_forget()
     text_input.place_forget()
+    gen_btn.place_forget()
     generate_btn.place_forget()
     
     
+    
+
 def About():
     canvas.itemconfig(text, text="")
-    label0 = tk.Label(root, text=("د/عزه مصطفي") ,font=("italic"))
+    label0 = tk.Label(root, text=("د/عزة طه") ,font=("italic"))
     label0.config(width=30)
     label0.place(x=250,y=140)
     label1 = tk.Label(root, text=("يوسف محمد سعيد") ,font=("Arial"))
@@ -38,10 +51,32 @@ def About():
 
     home_btn.place(x=350,y=450)
     
+    
     about_btn.place_forget()
+    typ_btn.place_forget()
     enter_btn.place_forget()
     exit_btn.place_forget()
 
+    
+    
+def Typ():
+        canvas.itemconfig(text, text="")
+    
+        text_input.place(x=220,y=40)
+        gen_btn.place(x=80,y=37)
+        home_btn.place(x=80,y=500)
+    
+    
+        about_btn.place_forget()
+        enter_btn.place_forget()
+        typ_btn.place_forget()
+        exit_btn.place_forget()
+        
+        
+        
+    
+        
+        
 
 def Enter():
     canvas.itemconfig(text, text="")
@@ -52,7 +87,57 @@ def Enter():
 
     about_btn.place_forget()
     enter_btn.place_forget()
+    typ_btn.place_forget()
     exit_btn.place_forget()
+    
+    
+    
+def Gen():
+    for widget in root.winfo_children():
+        widget.place_forget()
+    text_input.place(x=220, y=40)
+    gen_btn.place(x=80, y=37)
+    home_btn.place(x=80, y=500)
+
+    input_text = text_input.get()
+
+    detector = fb.ArabicPluralDetector()
+
+    words = input_text.split()
+    num_words = len(words)
+
+    header = tk.Label(root, text='word')
+    header.config(width=18)
+    header.place(x=400, y=150)
+    header = tk.Label(root, text='type')
+    header.config(width=18)
+    header.place(x=300, y=150)
+
+    m = 0
+    n = 0
+    r = 0
+    for i in range(num_words):
+        header = tk.Label(root, text=words[i])
+        header.config(width=18)
+        header.place(x=400, y=173+m)
+
+        output = detector.detect_plural(words[i])
+        num_outputs = len(output)
+
+        n = 0
+        for j in range(num_outputs):
+            cell = tk.Label(root, text=output[j])
+            cell.config(width=18)
+            cell.place(x=300-n, y=173+r)
+            
+            
+            
+        n = 0
+        r += 23
+        m += 23
+    
+    
+    
 
 
 def Generate():
@@ -68,6 +153,7 @@ def Generate():
     m = 0
     n = 0
     r = 0
+    
     header = tk.Label(root, text='word')
     header.config(width=10)
     header.place(x=400,y=150)
@@ -114,6 +200,9 @@ about_btn.place(x=150,y=350)
 enter_btn = ttk.Button(root, text="Enter", style="MyButton.TButton",command=Enter)
 enter_btn.place(x=250,y=350)
 
+typ_btn = ttk.Button(root, text="Type", style="MyButton.TButton",command=Typ)
+typ_btn.place(x=350,y=350)
+
 
 def distroy():
     root.destroy()
@@ -137,6 +226,9 @@ entry_text = tk.StringVar(value='...ادخل الجملة')
 text_input = tk.Entry(root ,validate='key', width=60 ,textvariable=entry_text,justify='right')
 text_input.bind('<FocusIn>', on_entry_click)
 text_input.bind('<FocusOut>', leave_entry_click)
+
+gen_btn = ttk.Button(root, text="Generate", style="MyButton.TButton", command=Gen)
+
 
 generate_btn = ttk.Button(root, text="Generate", style="MyButton.TButton", command=Generate)
 

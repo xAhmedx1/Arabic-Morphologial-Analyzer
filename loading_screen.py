@@ -26,7 +26,7 @@ welcome_label.place(x=250, y=15)
 
 
 image = PhotoImage(file=os.path.join(dir_path, 'gg.png'))
-# image = PhotoImage(file='gg.png')
+
 bg_label = Label(root, bg='#669CB2')
 bg_label.place(x=150, y=65)
 progress_label = Label(root, text='please wait...', font=("yu gothic ui", 13, 'bold'), bg='#669CB2')
